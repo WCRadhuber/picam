@@ -1,5 +1,5 @@
 # Mostly Copied From https://github.com/raspberrypi/picamera2/blob/main/examples/mjpeg_server.py
-# Just added line For cross origin requests
+# Added hostname for troubleshooting and CORS
 
 import io
 import logging
@@ -11,13 +11,16 @@ from picamera2 import Picamera2
 from picamera2.encoders import JpegEncoder
 from picamera2.outputs import FileOutput
 
-PAGE = """\
+import socket
+hostname = socket.gethostname()
+
+PAGE = f"""\
 <html>
 <head>
-<title>picamera2 MJPEG streaming demo</title>
+<title>{hostname}</title>
 </head>
 <body>
-<h1>Picamera2 MJPEG Streaming Demo</h1>
+<h1>{hostname}</h1>
 <img src="stream.mjpg" width="640" height="480" />
 </body>
 </html>
