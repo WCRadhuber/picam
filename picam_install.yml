@@ -1,0 +1,65 @@
+---
+- name: Install Picam Streaming Server as a Service
+  hosts: all
+  gather_facts: yes
+
+  vars:
+    picam_repo: "https://github.com/WCRadhuber/picam.git"
+    picam_download_path: >-
+      {{ "/tmp/picam" }}
+    picam_install_app: "/opt/picam/app.py"
+    picam_service_script: "/usr/bin/picam.sh"
+    picam_service_file: "/etc/systemd/system/picam.service"
+    user: "{{ ansible_facts['env']['USER'] }}"
+
+  tasks:
+    - name: Download Picam Software
+      become: false
+      git:
+        repo: "{{ picam_repo }}"
+        dest: "{{ picam_download_path }}"
+
+    - name: Replace User Placeholder with $USER
+      become: false
+      ansible.builtin.replace:
+        path: "{{ picam_download_path }}/picam.service"
+        regexp: 'YOUR_USER'
+        replace: "{{ user }}"
+    
+    - name: Copy Init Script into User Bin Dir
+      become: true
+      ansible.builtin.copy:
+        src: "{{ picam_download_path }}/picam.sh"
+        dest: "{{ picam_service_script }}"
+        remote_src: true
+        owner: "{{ user }}"
+        mode: '0755'
+
+    - name: Ensure install directory exists
+      become: true
+      ansible.builtin.file:
+        path: "/opt/picam/"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Copy app.py Code Into Opt
+      become: true
+      ansible.builtin.copy:
+        src: "{{ picam_download_path }}/app.py"
+        dest: "{{ picam_install_app }}"
+        remote_src: true
+
+    - name: Copy Service File to Systemd System Files
+      become: true
+      ansible.builtin.copy:
+        src: "{{ picam_download_path }}/picam.service"
+        dest:  "{{ picam_service_file }}"
+        remote_src: true
+
+    - name: Enable and start picam service
+      ansible.builtin.systemd:
+        name: picam
+        enabled: true
+        state: started
