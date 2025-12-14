@@ -1,0 +1,13 @@
+[Unit]
+Description=Picam Streaming Server
+After=network.target
+
+[Service]
+User=YOUR_USER
+
+WorkingDirectory=/opt/picam
+ExecStart=/usr/bin/python3 /opt/picam/app.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
