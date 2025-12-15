@@ -1,4 +1,1 @@
-# Picam
-## Basic API and Web Interface for Raspberry PI as a Service
- - Installation Instructions incoming for manual install
- - Ansible install yml script provided. Just be sure to change hosts from "all"
+Instructions designed to be installed with the user who the service will run as.

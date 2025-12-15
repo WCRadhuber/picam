@@ -6,7 +6,7 @@ After=network.target
 User=YOUR_USER
 
 WorkingDirectory=/opt/picam
-ExecStart=/usr/bin/python3 /opt/picam/app.py
+ExecStart=/usr/local/bin/python3 /opt/picam/app.py
 Restart=always
 
 [Install]

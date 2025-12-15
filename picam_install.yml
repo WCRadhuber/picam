@@ -8,7 +8,7 @@
     picam_download_path: >-
       {{ "/tmp/picam" }}
     picam_install_app: "/opt/picam/app.py"
-    picam_service_script: "/usr/bin/picam.sh"
+    picam_service_script: "/usr/local/bin/picam.sh"
     picam_service_file: "/etc/systemd/system/picam.service"
     user: "{{ ansible_facts['env']['USER'] }}"
 
@@ -59,6 +59,7 @@
         remote_src: true
 
     - name: Enable and start picam service
+      become: true
       ansible.builtin.systemd:
         name: picam
         enabled: true
